@@ -7,7 +7,7 @@
   export let hideIndicator = false
 </script>
 
-<div class="w-12 h-12">
+<div class="w-12 h-12 relative">
   <button
     on:click
     class="m-1 p-2 bg-transparent rounded-md focus:outline-none hover:(bg-white bg-opacity-7)"
@@ -17,9 +17,24 @@
     <!-- svelte-ignore a11y-missing-attribute -->
     <img src={icon} class="transform transition-transform" />
   </button>
+  {#if open && !hideIndicator}
+    <div class="absolute bottom-0 mb-1.5 w-full flex flex-row justify-center">
+      <div
+        class="h-0.75 rounded-full transition-all"
+        class:indicator-active={active}
+        class:indicator-inactive={!active}
+      />
+    </div>
+  {/if}
 </div>
 
 <style>
+  .indicator-active {
+    @apply w-3.5 bg-[#56BFF8];
+  }
+  .indicator-inactive {
+    @apply w-1.5 bg-white bg-opacity-50;
+  }
   .active {
     @apply bg-white bg-opacity-7;
   }

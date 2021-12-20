@@ -20,7 +20,7 @@
       "$containers/*": ["./src/containers/*"],
       "$lib/*": ["./src/lib/*"],
       "$styles/*": ["./src/styles/*"]
-    }
+    },
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"]
 }

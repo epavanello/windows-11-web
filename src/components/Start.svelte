@@ -10,5 +10,5 @@
   class="window flex flex-col rounded-lg w-[600px] min-h-60 absolute left-[50%] ml-[-300px] bottom-16"
 >
   <main class="flex-1" />
-  <footer class="bg-black bg-opacity-10 h-16" />
+  <footer class="bg-black bg-opacity-10 h-16 border-t border-white border-opacity-20" />
 </div>

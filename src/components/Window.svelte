@@ -1,8 +1,11 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { createEventDispatcher, onMount } from 'svelte'
+  import { fade, scale } from 'svelte/transition'
+  // search icons herehttps://icon-sets.iconify.design/
+  import Icon from '@iconify/svelte'
 
-  let width: number = 600
-  let height: number = 400
+  let width: number = 500
+  let height: number = 300
   export let title: string
   export let icon: string = ''
 
@@ -16,6 +19,8 @@
   let windowHeight = 0
 
   let moving = false
+
+  const dispatch = createEventDispatcher<{ close: void }>()
 
   function onMouseDown() {
     moving = true
@@ -38,13 +43,34 @@
   })
 </script>
 
-<div class="window rounded-lg absolute" style="left: {left}px; top: {top}px;">
-  <header class="min-h-7 flex flex-row items-center gap-2 px-2 text-white" on:mousedown={onMouseDown}>
+<div
+  in:scale={{ duration: 200, opacity: 0, start: 0.8 }}
+  out:scale={{ duration: 200, opacity: 0, start: 0.8 }}
+  class="window rounded-lg absolute"
+  style="left: {left}px; top: {top}px;"
+>
+  <header class="min-h-7 flex flex-row items-center gap-2 pl-2 text-white" on:mousedown={onMouseDown}>
     {#if icon}
       <!-- svelte-ignore a11y-missing-attribute -->
       <img class="h-4 w-4" src={icon} />
     {/if}
-    <p class="text-xs flex-1">{title}</p>
+    <p class="text-xs flex-1 items-center">{title}</p>
+    <div class="flex flex-row h-7">
+      <button class="action-button">
+        <Icon icon="codicon:chrome-minimize" />
+      </button>
+      <button class="action-button">
+        <Icon icon="fluent:maximize-16-regular" />
+      </button>
+      <button
+        class="action-button rounded-tr-lg !hover:bg-[#c42b1c]"
+        on:click={() => {
+          dispatch('close')
+        }}
+      >
+        <Icon icon="fluent:dismiss-16-regular" />
+      </button>
+    </div>
   </header>
   <main
     bind:clientWidth
@@ -59,3 +85,9 @@
   bind:innerWidth={windowWidth}
   bind:innerHeight={windowHeight}
 />
+
+<style>
+  .action-button {
+    @apply w-11 focus:outline-none hover:(bg-white bg-opacity-10);
+  }
+</style>
