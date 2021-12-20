@@ -10,7 +10,7 @@
 <div class="w-12 h-12 relative">
   <button
     on:click
-    class="m-1 p-2 bg-transparent rounded-md focus:outline-none hover:(bg-white bg-opacity-7)"
+    class="m-1 p-2 bg-transparent rounded-md hover:(bg-white bg-opacity-7)"
     class:active
     class:open={open && !hideIndicator}
   >

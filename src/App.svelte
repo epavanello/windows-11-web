@@ -7,6 +7,7 @@
   import DockIcon from '$components/DockIcon.svelte'
   import Start from '$components/Start.svelte'
   import Window from '$components/Window.svelte'
+  import { clickOutside } from '$lib/actions'
 
   let currentFocus: string | null = null
 
@@ -18,8 +19,8 @@
     name: string
     icon: string
     onOpen: () => void
-    isOpen: boolean,
-    hideIndicator?:boolean
+    isOpen: boolean
+    hideIndicator?: boolean
   }
   let programs: Program[] = [
     {
@@ -31,7 +32,7 @@
         programs = programs
       },
       isOpen: false,
-      hideIndicator:true
+      hideIndicator: true
     },
     {
       name: 'Explorer',
@@ -40,7 +41,7 @@
         currentFocus = 'Explorer'
         getProgramByName(programs, 'Explorer')!.isOpen = true
         programs = programs
-          closeStart()
+        closeStart()
       },
       isOpen: false
     }
@@ -65,7 +66,12 @@
   {/if}
 
   {#if getProgramByName(programs, 'Start').isOpen}
-    <Start />
+    <Start
+      on:close={() => {
+        getProgramByName(programs, 'Start').isOpen = false
+        programs = programs
+      }}
+    />
   {/if}
 
   <Dock>

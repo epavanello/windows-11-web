@@ -6,7 +6,7 @@
 
 <style>
   button {
-    @apply rounded-lg outline-none text-lg p-2 transform pr-5 pl-5 transition-colors duration-200;
+    @apply rounded-lg text-lg p-2 transform pr-5 pl-5 transition-colors duration-200;
   }
   .primary {
     @apply bg-blue-500 border-blue-300 text-gray-100 hover:bg-blue-400;

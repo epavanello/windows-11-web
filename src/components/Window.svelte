@@ -4,13 +4,10 @@
   // search icons herehttps://icon-sets.iconify.design/
   import Icon from '@iconify/svelte'
 
-  let width: number = 500
-  let height: number = 300
+  let width: number = 300
+  let height: number = 200
   export let title: string
   export let icon: string = ''
-
-  let clientWidth = width
-  let clientHeight = height
 
   let left = 0
   let top = 0
@@ -38,8 +35,8 @@
   }
 
   onMount(() => {
-    left = (windowWidth - Math.max(width, clientWidth)) / 2
-    top = (windowHeight - Math.max(height, clientHeight)) / 2
+    left = (windowWidth - width) / 2
+    top = (windowHeight - height) / 2
   })
 </script>
 
@@ -73,12 +70,12 @@
     </div>
   </header>
   <main
-    bind:clientWidth
-    bind:clientHeight
+    bind:clientWidth={width}
+    bind:clientHeight={height}
     style={`height: 1px; resize: both; min-width: ${width}px; min-height: ${height}px`}
   >
-  <h1 class="mt-20 text-center text-xl text-white">WIP 😉</h1>
-</main>
+    <h1 class="mt-20 text-center text-xl text-white">WIP 😉</h1>
+  </main>
 </div>
 
 <svelte:window
@@ -90,6 +87,6 @@
 
 <style>
   .action-button {
-    @apply w-11 focus:outline-none hover:(bg-white bg-opacity-10);
+    @apply w-11 hover:(bg-white bg-opacity-10);
   }
 </style>

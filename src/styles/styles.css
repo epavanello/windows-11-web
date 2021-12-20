@@ -3,12 +3,17 @@
 * {
   font-family: 'Segoe UI Variable', sans-serif;
   cursor: default !important;
+  user-select: none;
+}
+
+*:focus {
+  outline: none !important;
 }
 
 @supports (backdrop-filter: blur(30px)) {
   .glass,
   .window {
-    background-color: rgba(60, 60, 60, 0.25);
+    background-color: #2d2d2f9d;
     backdrop-filter: blur(30px);
   }
 }
@@ -16,10 +21,15 @@
 @supports not (backdrop-filter: blur(30px)) {
   .glass,
   .window {
-    background-color: rgba(60, 60, 60);
+    background-color: #2d2d2f;
   }
 }
 
-.window {
-  box-shadow: inset 0px 0px 2px 0px rgba(255, 255, 255, 0.5);
+.glass.no-transparency, .window.no-transparency {
+  background-color: #2d2d2f;
+}
+
+.window,
+.window-border {
+  box-shadow: inset 0px 0px 2px 0px rgba(255, 255, 255, 0.3);
 }
