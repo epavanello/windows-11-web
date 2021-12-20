@@ -13,7 +13,7 @@
 <div
   in:fly={{ y: 300, duration: 200 }}
   out:fly={{ y: 300, duration: 200 }}
-  class="window flex flex-col rounded-lg w-[400px] min-h-100 absolute left-[50%] ml-[-200px] bottom-16"
+  class="window flex flex-col rounded-lg w-[400px] min-h-100 absolute left-[50%] ml-[-200px] bottom-16 z-50"
   use:clickOutside={() => {
     dispatch('close')
   }}

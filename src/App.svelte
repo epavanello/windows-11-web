@@ -7,83 +7,110 @@
   import DockIcon from '$components/DockIcon.svelte'
   import Start from '$components/Start.svelte'
   import Window from '$components/Window.svelte'
-  import { clickOutside } from '$lib/actions'
 
-  let currentFocus: string | null = null
-
-  function getProgramByName(programsToSearch: Program[], name: string): Program | null {
-    return programsToSearch.find((program) => program.name === name)
-  }
+  let startIsOpen = false
 
   interface Program {
+    index: number
     name: string
+    title: string
     icon: string
-    onOpen: () => void
     isOpen: boolean
+    isMinimized: boolean
     hideIndicator?: boolean
+    left: number
+    top: number
   }
   let programs: Program[] = [
     {
-      name: 'Start',
-      icon: 'start.png',
-      onOpen: () => {
-        currentFocus = 'Start'
-        getProgramByName(programs, 'Start')!.isOpen = !getProgramByName(programs, 'Start')!.isOpen
-        programs = programs
-      },
-      isOpen: false,
-      hideIndicator: true
+      name: 'explorer',
+      title: 'File Explorer',
+      icon: 'explorer.png',
+      isMinimized: false,
+      isOpen: false
     },
     {
-      name: 'Explorer',
-      icon: 'explorer.png',
-      onOpen: () => {
-        currentFocus = 'Explorer'
-        getProgramByName(programs, 'Explorer')!.isOpen = true
-        programs = programs
-        closeStart()
-      },
+      name: 'edge',
+      title: 'Edge',
+      icon: 'edge.png',
+      isMinimized: false,
       isOpen: false
     }
-  ]
+  ].map((program, index) => ({
+    ...program,
+    index,
+    left: 0,
+    top: 0
+  }))
 
-  function closeStart() {
-    getProgramByName(programs, 'Start')!.isOpen = false
-    programs = programs
+  function setProgramAsFirst(current: string) {
+    programs = [...programs.filter((p) => p.name !== current), ...programs.filter((p) => p.name === current)]
   }
 
-  function onWindowClose() {
-    getProgramByName(programs, 'Explorer')!.isOpen = false
-    programs = programs
-    currentFocus = ''
+  function areEquals(p1: Program, p2: Program) {
+    return p1.name == p2.name
+  }
+
+  let activeProgram: Program | undefined
+  $: {
+    activeProgram = programs.reverse().find((program) => program.isOpen && !program.isMinimized)
   }
 </script>
 
 <Desktop />
 <main class="h-full w-full overflow-hidden absolute left-0 top-0">
-  {#if getProgramByName(programs, 'Explorer').isOpen}
-    <Window title="File Explorer" icon="explorer.png" on:close={onWindowClose} />
-  {/if}
+  {#each programs as program, i (program.name)}
+    {#if program.isOpen && !program.isMinimized}
+      <Window
+        title={program.title}
+        icon={program.icon}
+        isActive={activeProgram && areEquals(activeProgram, program)}
+        index={i}
+        bind:left={program.left}
+        bind:top={program.top}
+        on:close={() => {
+          program.isOpen = false
+          program.isMinimized = false
+        }}
+        on:focus={() => {
+          setProgramAsFirst(program.name)
+        }}
+        bind:minimized={program.isMinimized}
+      />
+    {/if}
+  {/each}
 
-  {#if getProgramByName(programs, 'Start').isOpen}
+  {#if startIsOpen}
     <Start
       on:close={() => {
-        getProgramByName(programs, 'Start').isOpen = false
-        programs = programs
+        startIsOpen = false
       }}
     />
   {/if}
 
   <Dock>
-    {#each programs as program}
+    <DockIcon
+      icon="start.png"
+      open={startIsOpen}
+      hideIndicator={true}
+      on:click={() => {
+        startIsOpen = !startIsOpen
+      }}
+    />
+    {#each programs.sort((p1, p2) => p1.index - p2.index) as program (program.name)}
       <DockIcon
         icon={program.icon}
         open={program.isOpen}
-        active={currentFocus === program.name}
+        active={activeProgram && areEquals(activeProgram, program)}
         hideIndicator={program.hideIndicator}
         on:click={() => {
-          currentFocus = program.name
-          program.onOpen()
+          if (activeProgram && areEquals(activeProgram, program)) {
+            program.isMinimized = true
+          } else {
+            program.isMinimized = false
+            setProgramAsFirst(program.name)
+            program.isOpen = true
+          }
         }}
       />
     {/each}
