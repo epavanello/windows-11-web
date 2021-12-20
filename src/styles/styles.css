@@ -1,0 +1,15 @@
+@import url('http://fonts.cdnfonts.com/css/segoe-ui-variable');
+
+* {
+  font-family: 'Segoe UI Variable', sans-serif;
+}
+
+.glass,
+.window {
+  background-color: rgba(60, 60, 60, 0.25);
+  backdrop-filter: blur(30px);
+}
+
+.window {
+  box-shadow: inset 0px 0px 2px 0px rgba(255, 255, 255, 0.5);
+}

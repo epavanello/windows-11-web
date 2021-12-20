@@ -15,9 +15,10 @@
     "allowJs": true,
     "checkJs": true,
     "paths": {
+      "$assets/*": ["./src/assets/*"],
       "$components/*": ["./src/components/*"],
-      "$lib/*": ["./src/lib/*"],
       "$containers/*": ["./src/containers/*"],
+      "$lib/*": ["./src/lib/*"],
       "$styles/*": ["./src/styles/*"]
     }
   },

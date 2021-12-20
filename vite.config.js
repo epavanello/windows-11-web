@@ -9,9 +9,10 @@ export default defineConfig({
   plugins: [svelte(), WindiCSS()],
   resolve: {
     alias: {
+      $assets: path.resolve(path.dirname(''), './src/assets'),
       $components: path.resolve(path.dirname(''), './src/components'),
-      $lib: path.resolve(path.dirname(''), './src/lib'),
       $containers: path.resolve(path.dirname(''), './src/containers'),
+      $lib: path.resolve(path.dirname(''), './src/lib'),
       $styles: path.resolve(path.dirname(''), './src/styles')
     }
   }
