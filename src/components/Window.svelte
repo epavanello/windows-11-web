@@ -76,7 +76,9 @@
     bind:clientWidth
     bind:clientHeight
     style={`height: 1px; resize: both; min-width: ${width}px; min-height: ${height}px`}
-  />
+  >
+  <h1 class="mt-20 text-center text-xl text-white">WIP 😉</h1>
+</main>
 </div>
 
 <svelte:window
