@@ -3,9 +3,10 @@
   import { fly, scale } from 'svelte/transition'
   // search icons herehttps://icon-sets.iconify.design/
   import Icon from '@iconify/svelte'
+  import { draggable } from 'svelte-drag'
 
   let width: number = 300
-  let height: number = 200
+  let height: number = 300
   export let title: string
   export let icon: string = ''
   export let isActive = false
@@ -14,37 +15,16 @@
   export let left = 0
   export let top = 0
 
-  let windowWidth = 0
-  let windowHeight = 0
-  let containerWidth = 0
-  let containerHeight = 0
-
-  let moving = false
   export let minimized = false
 
   const dispatch = createEventDispatcher<{ close: void; minimize: void; focus: void }>()
 
-  function onMouseDown() {
-    moving = true
-  }
+  if (left == 0 && top == 0) {
+    left = (document.body.clientWidth - width) / 2
+    top = (document.body.clientHeight - 48 - height) / 2
 
-  function onMouseMove(e: MouseEvent) {
-    if (moving) {
-      left += e.movementX
-      top += e.movementY
-    }
+    console.log(left, top)
   }
-
-  function onMouseUp() {
-    moving = false
-  }
-
-  onMount(() => {
-    if (left == 0 && top == 0) {
-      left = (windowWidth - containerWidth) / 2
-      top = (windowHeight - 48 - containerHeight) / 2
-    }
-  })
 
   function flyIfMinimized(node: HTMLElement, params: { minimized: boolean }) {
     if (true) {
@@ -59,12 +39,22 @@
     transition:scale={{ duration: 200, opacity: 0, start: 0.8 }}
     class="window rounded-lg absolute"
     class:z-10={isActive}
-    style="left: {left}px; top: {top}px; z-index: {10 + elevation};"
-    bind:clientWidth={containerWidth}
-    bind:clientHeight={containerHeight}
+    style="z-index: {10 + elevation}; width: {width}px; height: {height}px;"
     on:mousedown={() => dispatch('focus')}
+    use:draggable={{
+      handle: '.dragger',
+      bounds: {},
+      defaultPosition: {
+        x: left,
+        y: top
+      }
+    }}
+    on:svelte-drag:end={(e) => {
+      left = e.detail.offsetX
+      top = e.detail.offsetY
+    }}
   >
-    <header class="min-h-7 flex flex-row items-center gap-2 pl-2 text-white" on:mousedown={onMouseDown}>
+    <header class="dragger min-h-7 flex flex-row items-center gap-2 pl-2 text-white">
       {#if icon}
         <!-- svelte-ignore a11y-missing-attribute -->
         <img class="h-4 w-4" src={icon} />
@@ -93,22 +83,11 @@
         </button>
       </div>
     </header>
-    <main
-      bind:clientWidth={width}
-      bind:clientHeight={height}
-      style={`height: 1px; resize: both; min-width: ${width}px; min-height: ${height}px`}
-    >
+    <main class="w-full h-full">
       <h1 class="mt-20 text-center text-xl text-white">WIP 😉</h1>
     </main>
   </div>
 </div>
-
-<svelte:window
-  on:mouseup={onMouseUp}
-  on:mousemove={onMouseMove}
-  bind:innerWidth={windowWidth}
-  bind:innerHeight={windowHeight}
-/>
 
 <style>
   .action-button {

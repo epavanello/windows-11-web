@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@iconify/json": "^1.1.445",
-    "@iconify/svelte": "^2.1.0"
+    "@iconify/svelte": "^2.1.0",
+    "svelte-drag": "^2.4.0"
   }
 }
