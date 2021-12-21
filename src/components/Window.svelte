@@ -9,7 +9,7 @@
   export let title: string
   export let icon: string = ''
   export let isActive = false
-  export let index: number
+  export let elevation: number
 
   export let left = 0
   export let top = 0
@@ -59,10 +59,10 @@
     transition:scale={{ duration: 200, opacity: 0, start: 0.8 }}
     class="window rounded-lg absolute"
     class:z-10={isActive}
-    style="left: {left}px; top: {top}px; z-index: ${10 + index}"
+    style="left: {left}px; top: {top}px; z-index: {10 + elevation};"
     bind:clientWidth={containerWidth}
     bind:clientHeight={containerHeight}
-    on:click={() => dispatch('focus')}
+    on:mousedown={() => dispatch('focus')}
   >
     <header class="min-h-7 flex flex-row items-center gap-2 pl-2 text-white" on:mousedown={onMouseDown}>
       {#if icon}

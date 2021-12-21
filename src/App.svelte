@@ -11,7 +11,6 @@
   let startIsOpen = false
 
   interface Program {
-    index: number
     name: string
     title: string
     icon: string
@@ -20,7 +19,9 @@
     hideIndicator?: boolean
     left: number
     top: number
+    elevation: number
   }
+
   let programs: Program[] = [
     {
       name: 'explorer',
@@ -38,13 +39,26 @@
     }
   ].map((program, index) => ({
     ...program,
-    index,
     left: 0,
-    top: 0
+    top: 0,
+    elevation: index + 1
   }))
 
   function setProgramAsFirst(current: string) {
-    programs = [...programs.filter((p) => p.name !== current), ...programs.filter((p) => p.name === current)]
+    const currentElevation = programs.find((program) => program.name === current)?.elevation
+    if (typeof currentElevation === 'undefined') {
+      return
+    }
+
+    programs.forEach((program) => {
+      if (program.name == current) {
+        program.elevation = programs.length
+      } else {
+        program.elevation = program.elevation > currentElevation ? program.elevation - 1 : program.elevation
+      }
+    })
+
+    programs = programs
   }
 
   function areEquals(p1: Program, p2: Program) {
@@ -53,19 +67,21 @@
 
   let activeProgram: Program | undefined
   $: {
-    activeProgram = programs.reverse().find((program) => program.isOpen && !program.isMinimized)
+    activeProgram = [...programs]
+      .sort((p1, p2) => p2.elevation - p1.elevation)
+      .find((program) => program.isOpen && !program.isMinimized)
   }
 </script>
 
 <Desktop />
 <main class="h-full w-full overflow-hidden absolute left-0 top-0">
-  {#each programs as program, i (program.name)}
+  {#each programs as program (program.name)}
     {#if program.isOpen && !program.isMinimized}
       <Window
         title={program.title}
         icon={program.icon}
         isActive={activeProgram && areEquals(activeProgram, program)}
-        index={i}
+        elevation={program.elevation}
         bind:left={program.left}
         bind:top={program.top}
         on:close={() => {
@@ -97,7 +113,7 @@
         startIsOpen = !startIsOpen
       }}
     />
-    {#each programs.sort((p1, p2) => p1.index - p2.index) as program (program.name)}
+    {#each programs as program (program.name)}
       <DockIcon
         icon={program.icon}
         open={program.isOpen}
@@ -107,6 +123,7 @@
           if (activeProgram && areEquals(activeProgram, program)) {
             program.isMinimized = true
           } else {
+            console.log('clicked')
             program.isMinimized = false
             setProgramAsFirst(program.name)
             program.isOpen = true
