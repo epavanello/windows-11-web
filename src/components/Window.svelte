@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte'
+  import { createEventDispatcher } from 'svelte'
   import { fly, scale } from 'svelte/transition'
   // search icons herehttps://icon-sets.iconify.design/
   import Icon from '@iconify/svelte'
-  import { draggable } from 'svelte-drag'
+  import { draggable } from '@neodrag/svelte'
 
   let width: number = 300
   let height: number = 300
@@ -26,8 +26,8 @@
     console.log(left, top)
   }
 
-  function flyIfMinimized(node: HTMLElement, params: { minimized: boolean }) {
-    if (true) {
+  function flyIfMinimized(node: HTMLElement, _: { minimized: boolean }) {
+    if (true || minimized) {
       return fly(node, { duration: 200, opacity: 0, y: 50 })
     }
     return {}
@@ -37,7 +37,7 @@
 <div out:flyIfMinimized={{ minimized }}>
   <div
     transition:scale={{ duration: 200, opacity: 0, start: 0.8 }}
-    class="window rounded-lg absolute"
+    class="window rounded-lg absolute resize flex flex-col items-stretch"
     class:z-10={isActive}
     style="z-index: {10 + elevation}; width: {width}px; height: {height}px;"
     on:mousedown={() => dispatch('focus')}
@@ -47,9 +47,9 @@
       defaultPosition: {
         x: left,
         y: top
-      }
+      },
     }}
-    on:svelte-drag:end={(e) => {
+    on:neodrag:end={(e) => {
       left = e.detail.offsetX
       top = e.detail.offsetY
     }}
@@ -83,8 +83,10 @@
         </button>
       </div>
     </header>
-    <main class="w-full h-full">
-      <h1 class="mt-20 text-center text-xl text-white">WIP 😉</h1>
+    <main class="flex-1">
+      <slot>
+        <h1 class="mt-20 text-center text-xl text-white">WIP 😉</h1>
+      </slot>
     </main>
   </div>
 </div>

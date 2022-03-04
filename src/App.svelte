@@ -7,6 +7,8 @@
   import DockIcon from '$components/DockIcon.svelte'
   import Start from '$components/Start.svelte'
   import Window from '$components/Window.svelte'
+  import type { SvelteComponent } from 'svelte'
+  import Edge from '$containers/Edge.svelte'
 
   let startIsOpen = false
 
@@ -20,6 +22,7 @@
     left: number
     top: number
     elevation: number
+    component?: typeof SvelteComponent
   }
 
   let programs: Program[] = [
@@ -35,7 +38,8 @@
       title: 'Edge',
       icon: 'edge.png',
       isMinimized: false,
-      isOpen: false
+      isOpen: false,
+      component: Edge
     }
   ].map((program, index) => ({
     ...program,
@@ -92,7 +96,11 @@
           setProgramAsFirst(program.name)
         }}
         bind:minimized={program.isMinimized}
-      />
+      >
+        {#if program.component}
+          <svelte:component this={program.component} />
+        {/if}
+      </Window>
     {/if}
   {/each}
 

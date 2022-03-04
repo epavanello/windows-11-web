@@ -3,6 +3,7 @@
     "svelte.svelte-vscode",
     "voorjaar.windicss-intellisense",
     "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "fivethree.vscode-svelte-snippets"
   ]
 }
